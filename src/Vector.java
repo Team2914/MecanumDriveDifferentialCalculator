@@ -20,11 +20,11 @@ public class Vector {
         this.y = v.y;
     }
 
-    /*public void draw(Draw canvas, Color color, double radius) {
+    public void draw(Draw canvas, Color color, double radius) {
         canvas.setPenRadius(radius);
         canvas.setPenColor(color);
         canvas.line(x, y, x+i, y+j);
-    }*/
+    }
 
     public double dot(Vector v2) {
         return this.i*v2.i + this.j*v2.j;

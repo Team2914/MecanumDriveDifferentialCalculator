@@ -1,7 +1,7 @@
 public class Main {
     public static double SIZE = 500.0;
     public static double SCALE = SIZE/20.0;
-    public static double UNITLEN = 2/Math.sqrt(8);
+    public static double UNITLEN = 1/Math.sqrt(2);
 
     public static double in(double len) {
         return len*SCALE;
@@ -9,7 +9,7 @@ public class Main {
 
     public static double UNITPIXLEN = in(UNITLEN)/SIZE;
     public static void main(String[] args) {
-        double[] scalers = findCompensation(0.5,0);
+        double[] scalers = findCompensation(0,-1);
         System.out.println("Front Left Velocity: "+scalers[0]+", "+scalers[1]);
         // scalers[0] => back left wheel scaler
         // scalers[1] => back right wheel scaler
@@ -19,63 +19,63 @@ public class Main {
     public static double[] findCompensation(double headingI, double headingJ) {
         double scaleLeft = 1;
         double scaleRight = 1;
-        //Draw canvas = new Draw();
-        //canvas.setCanvasSize((int) SIZE,(int) SIZE);
+        Draw canvas = new Draw();
+        canvas.setCanvasSize((int) SIZE,(int) SIZE);
 
         // Draw center line
-        /*canvas.setPenRadius(0.005);
-        canvas.setPenColor(canvas.BLACK);*/
+        canvas.setPenRadius(0.005);
+        canvas.setPenColor(canvas.BLACK);
         double axlePixelDistance = in(Config.axleDistance/2.0)/SIZE;
         double frontAxleY = 0.5+axlePixelDistance;
         double backAxleY = 0.5-axlePixelDistance;
-        //canvas.line(0.5,backAxleY,0.5, frontAxleY);
+        canvas.line(0.5,backAxleY,0.5, frontAxleY);
 
         // Draw front axle line
-        /*canvas.setPenRadius(0.01);
-        canvas.setPenColor(canvas.BLUE);*/
+        canvas.setPenRadius(0.01);
+        canvas.setPenColor(canvas.BLUE);
         double frontAxlePixelLength = in(Config.frontAxleLength/2.0)/SIZE;
         double frontLeftWheelX = 0.5-frontAxlePixelLength;
         double frontRightWheelX = 0.5+frontAxlePixelLength;
-        /*canvas.line(frontLeftWheelX, frontAxleY, frontRightWheelX, frontAxleY);
+        canvas.line(frontLeftWheelX, frontAxleY, frontRightWheelX, frontAxleY);
         canvas.setPenColor(canvas.PRINCETON_ORANGE);
-        canvas.circle(0.5, frontAxleY, 0.01);*/
+        canvas.circle(0.5, frontAxleY, 0.01);
 
         // Draw front left wheel
-        /*canvas.setPenRadius(0.01);
+        canvas.setPenRadius(0.01);
         canvas.setPenColor(canvas.GRAY);
-        canvas.rectangle(frontLeftWheelX,frontAxleY,in(Config.wheelWidth/2)/SIZE, in(Config.wheelHeight/2)/SIZE);*/
+        canvas.rectangle(frontLeftWheelX,frontAxleY,in(Config.wheelWidth/2)/SIZE, in(Config.wheelHeight/2)/SIZE);
 
         // Draw front right wheel
-        /*canvas.setPenRadius(0.01);
+        canvas.setPenRadius(0.01);
         canvas.setPenColor(canvas.GRAY);
-        canvas.rectangle(frontRightWheelX,frontAxleY,in(Config.wheelWidth/2)/SIZE, in(Config.wheelHeight/2)/SIZE);*/
+        canvas.rectangle(frontRightWheelX,frontAxleY,in(Config.wheelWidth/2)/SIZE, in(Config.wheelHeight/2)/SIZE);
 
         // Draw back axle line
-        /*canvas.setPenRadius(0.01);
-        canvas.setPenColor(canvas.BLUE);*/
+        canvas.setPenRadius(0.01);
+        canvas.setPenColor(canvas.BLUE);
         double backAxlePixelLength = in(Config.backAxleLength/2.0)/SIZE;
         double backLeftWheelX = 0.5-backAxlePixelLength;
         double backRightWheelX = 0.5+backAxlePixelLength;
-        /*canvas.line(backLeftWheelX, backAxleY, backRightWheelX, backAxleY);
+        canvas.line(backLeftWheelX, backAxleY, backRightWheelX, backAxleY);
         canvas.setPenColor(canvas.PRINCETON_ORANGE);
-        canvas.circle(0.5, backAxleY, 0.01);*/
+        canvas.circle(0.5, backAxleY, 0.01);
 
         // Draw back left wheel
-        /*canvas.setPenRadius(0.01);
+        canvas.setPenRadius(0.01);
         canvas.setPenColor(canvas.GRAY);
-        canvas.rectangle(backLeftWheelX,backAxleY,in(Config.wheelWidth/2)/SIZE, in(Config.wheelHeight/2)/SIZE);*/
+        canvas.rectangle(backLeftWheelX,backAxleY,in(Config.wheelWidth/2)/SIZE, in(Config.wheelHeight/2)/SIZE);
 
         // Draw back right wheel
-        /*canvas.setPenRadius(0.01);
+        canvas.setPenRadius(0.01);
         canvas.setPenColor(canvas.GRAY);
-        canvas.rectangle(backRightWheelX,backAxleY,in(Config.wheelWidth/2)/SIZE, in(Config.wheelHeight/2)/SIZE);*/
+        canvas.rectangle(backRightWheelX,backAxleY,in(Config.wheelWidth/2)/SIZE, in(Config.wheelHeight/2)/SIZE);
 
         // Draw center of mass
         double pixelCOMX = in(Config.COMX)/SIZE;
         double pixelCOMY = in(Config.COMY)/SIZE;
-        /*canvas.setPenRadius(0.01);
+        canvas.setPenRadius(0.01);
         canvas.setPenColor(canvas.RED);
-        canvas.circle(0.5+pixelCOMX, 0.5+pixelCOMY,0.01);*/
+        canvas.circle(0.5+pixelCOMX, 0.5+pixelCOMY,0.01);
 
         // Build COM to wheel vectors
         Vector frontLeftCOMVector = new Vector(0.5+pixelCOMX,0.5+pixelCOMY, frontLeftWheelX-0.5-pixelCOMX,frontAxleY-0.5-pixelCOMY);
@@ -91,13 +91,14 @@ public class Main {
 
         // Build Heading Vector
         Vector headingVector = new Vector(0.5+pixelCOMX,0.5+pixelCOMY, in(headingI)/SIZE, in(headingJ)/SIZE);
-        //headingVector.draw(canvas, canvas.MAGENTA, 0.02);
+        headingVector.draw(canvas, canvas.MAGENTA, 0.02);
 
         // Build wheel drive vectors
         Vector frontLeftDriveVector = new Vector(frontLeftWheelX, frontAxleY, UNITPIXLEN*(-1), UNITPIXLEN);
         Vector frontRightDriveVector = new Vector(frontRightWheelX, frontAxleY, UNITPIXLEN, UNITPIXLEN);
         Vector backLeftDriveVector = new Vector(backLeftWheelX, backAxleY, UNITPIXLEN, UNITPIXLEN);
         Vector backRightDriveVector = new Vector(backRightWheelX, backAxleY, UNITPIXLEN*(-1), UNITPIXLEN);
+        System.out.println(frontLeftDriveVector.length());
 
         // Project heading onto drive vectors
         Vector frontLeftVector = frontLeftDriveVector.parallelProjection(headingVector, frontLeftDriveVector.x, frontLeftDriveVector.y);
@@ -117,7 +118,7 @@ public class Main {
         double backRightVel = backRightVector.length()*Math.signum(backRightVector.dot(backRightDriveVector));
 
         // Draw wheel velocity
-        /*canvas.setPenRadius(0.01);
+        canvas.setPenRadius(0.01);
         canvas.setPenColor(frontLeftVel>0?canvas.GREEN:canvas.RED);
         canvas.line(frontLeftWheelX-wheelPixelWidth,frontAxleY,frontLeftWheelX-wheelPixelWidth, frontAxleY+frontLeftVel);
         canvas.setPenColor(frontRightVel>0?canvas.GREEN:canvas.RED);
@@ -125,7 +126,7 @@ public class Main {
         canvas.setPenColor(backLeftVel>0?canvas.GREEN:canvas.RED);
         canvas.line(backLeftWheelX-wheelPixelWidth,backAxleY,backLeftWheelX-wheelPixelWidth, backAxleY+backLeftVel);
         canvas.setPenColor(backRightVel>0?canvas.GREEN:canvas.RED);
-        canvas.line(backRightWheelX+wheelPixelWidth,backAxleY,backRightWheelX+wheelPixelWidth, backAxleY+backRightVel);*/
+        canvas.line(backRightWheelX+wheelPixelWidth,backAxleY,backRightWheelX+wheelPixelWidth, backAxleY+backRightVel);
 
         // Calc torque vectors
         Vector frontLeftTorqueVector = frontLeftCOMVector.perpendicularProjection(frontLeftDriveVector,frontLeftDriveVector.x, frontLeftDriveVector.y);
@@ -140,20 +141,20 @@ public class Main {
         backRightTorqueVector.scale(backRightVel*backRightCOMVector.length()*SIZE);
 
         // Draw torque vectors
-        /*frontLeftTorqueVector.draw(canvas, canvas.RED,0.01);
+        frontLeftTorqueVector.draw(canvas, canvas.RED,0.01);
         frontRightTorqueVector.draw(canvas, canvas.RED,0.01);
         backLeftTorqueVector.draw(canvas, canvas.RED,0.01);
-        backRightTorqueVector.draw(canvas, canvas.RED,0.01);*/
+        backRightTorqueVector.draw(canvas, canvas.RED,0.01);
 
         // Draw wheel vectors
-        /*frontLeftVector.draw(canvas, canvas.GREEN, 0.01);
+        frontLeftVector.draw(canvas, canvas.GREEN, 0.01);
         frontRightVector.draw(canvas, canvas.GREEN, 0.01);
         backLeftVector.draw(canvas, canvas.GREEN, 0.01);
-        backRightVector.draw(canvas, canvas.GREEN, 0.01);*/
+        backRightVector.draw(canvas, canvas.GREEN, 0.01);
 
         double resScaleRight = backRightTorqueVector.length()==0?1:frontLeftTorqueVector.length()/backRightTorqueVector.length();
         double resScaleLeft = backLeftTorqueVector.length()==0?1:frontRightTorqueVector.length()/backLeftTorqueVector.length();
-        double[] result = {frontLeftVel, frontRightVel, backLeftVel*resScaleLeft, backRightVel*resScaleRight};
+        double[] result = {resScaleLeft,resScaleRight};
         return result;
     }
 }
